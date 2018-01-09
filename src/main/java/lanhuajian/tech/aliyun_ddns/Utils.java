@@ -53,11 +53,8 @@ public class Utils {
         while (it.hasNext()) {
             try {
                 String ip = it.next().call();
-                if (ip != null) {
-                    ip = ip.trim();
-                    if (ip.length() > 1) {
-                        return ip;
-                    }
+                if (!isBlank(ip)) {
+                    return ip.trim();
                 }
             } catch (Throwable t) {
                 lastException = t;
@@ -171,6 +168,6 @@ public class Utils {
     }
 
     public static boolean isBlank(String str) {
-        return str == null || str.isEmpty() || str.trim().isEmpty();
+        return str == null || str.length() == 0 || str.trim().length() == 0;
     }
 }
