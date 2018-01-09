@@ -37,7 +37,7 @@
 
 ## 注意事项
 1. 这个库只修改域名解析记录的值，不添加记录，因此需要先手动在阿里云云解析中增加记录
-2. 如果修改解析记录成功，则退出码（exit code）是`666`；不修改则是`0`，其他退出码代表出错。可以编写一个shell脚本来对退出码进行判断做特殊逻辑
+2. 如果修改解析记录成功，则退出码（exit code）是`66`；不修改则是`0`，其他退出码代表出错。可以编写一个shell脚本来对退出码进行判断做特殊逻辑
 3. 请不要在意我那蹩脚的英文日志，本来我是输出中文日志的，但我那破路由器跑java有乱码QAQ，我不知道怎么解决所以才改成英文日志的
 
 ## 定时任务脚本
@@ -62,10 +62,14 @@ if [ $exit_code -eq 0 ]; then
   # 大部分情况下ip没有变化，此时不需要记录日志
   rm "$log_file"
 else
-  date_var=${time_var:0:10}    
-  mkdir -p logs/$date_var 
+  date_var=${time_var:0:10}
+  mkdir -p logs/$date_var
   # 修改失败或修改成功的日志将会记录到logs/yyyy-MM-dd/目录中
-  mv "$log_file" "$basepath/logs/$date_var"
+  if [ $exit_code -eq 66 ]; then
+    mv "$log_file" "$basepath/logs/$date_var/${time_var}_success.log"
+  else
+    mv "$log_file" "$basepath/logs/$date_var/${time_var}_fail.log"
+  fi
 fi
 ```
 
