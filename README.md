@@ -31,7 +31,7 @@
     
 ## 代码逻辑
 1. 从[DescribeDomainRecords接口](https://help.aliyun.com/document_detail/29776.html?spm=5176.doc29739.6.620.LMdHQJ)获取域名解析记录列表
-2. 用这则表达式去匹配查找域名解析记录及其记录值（获取记录的ip）
+2. 用正则表达式去匹配查找域名解析记录及其记录值（获取记录的ip）
 3. 获取公网ip
 4. 判断公网ip和域名解析记录的值是否相等，如果不等则使用[UpdateDomainRecord接口](https://help.aliyun.com/document_detail/29774.html?spm=5176.doc29776.6.618.OWxgZ1)去修改记录，否则不做修改
 
