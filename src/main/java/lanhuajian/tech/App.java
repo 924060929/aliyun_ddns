@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -45,16 +46,21 @@ public class App {
         }
     }
 
-    private static Properties getConfig() {
+    private static Properties getConfig() throws IOException {
+        FileInputStream fileInputStream = null;
         try {
             Properties properties = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("config.properties");
+            fileInputStream = new FileInputStream("config.properties");
             properties.load(fileInputStream);
             return properties;
         } catch (FileNotFoundException e) {
             throw new IllegalStateException("lost config.properties", e);
         } catch (Throwable t) {
             throw new IllegalStateException("loading config.properties fail", t);
+        } finally {
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
         }
     }
 }
