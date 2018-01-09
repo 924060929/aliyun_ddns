@@ -11,13 +11,19 @@
 2. 从aliyun_ddns/target中获取`aliyun_ddns.jar`，将其上传到路由器或服务器上
 3. 在aliyun_ddns.jar同级目录中编写`config.properties`，内容如下：
     ```
+    # 区域ID，一般填写cn-hangzhou即可
     regionId=<regionId>
+    # 阿里云API访问ID
     accessKeyId=<accessKeyId>
+    # 阿里云API访问秘钥
     secret=<secret>
+    # 域名
     domainName=<example.com>
+    # 匹配RR的正则表达式
+    recordPattern=
     ```
     请参考[如何选择 RegionId](https://help.aliyun.com/knowledge_detail/43190.html?spm=5176.11065259.1996646101.searchclickresult.269c30b5par2K4)、[地域和可用区](https://help.aliyun.com/document_detail/40654.html?spm=5176.10695662.1996646101.1.42de3412ohrQBN)、[获取AccessKey](https://help.aliyun.com/document_detail/63724.html?spm=5176.doc52740.6.541.Z1fNDa)    
-    如果不知道regionId写什么，可以写`cn-hangzhou`
+    `recordPattern`填写正则表达式，用来匹配RR的值。RR指的是二级url，如`@`、`www`、`wap`等。只有匹配了recordPattern的、而且是A记录的才会被匹配，只匹配第一个。如果不填写recordPattern的值，则会找到第一个A记录进行匹配
 4. 运行aliyun_ddns.jar即可，
     ```
     java -jar aliyun_ddns.jar

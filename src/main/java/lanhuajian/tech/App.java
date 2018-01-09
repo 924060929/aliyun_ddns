@@ -2,6 +2,7 @@ package lanhuajian.tech;
 
 import lanhuajian.tech.aliyun_ddns.DnsClient;
 import lanhuajian.tech.aliyun_ddns.Utils;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.io.FileInputStream;
@@ -24,26 +25,41 @@ public class App {
         );
 
         String domainName = properties.getProperty("domainName");
-        System.out.println("begin fetch domain(" + domainName + ") record list...");
+        System.out.println("Begin fetch domain(" + domainName + ") record list...");
         JSONObject domainNameInfo = dnsClient.getDomainNameInfo(domainName);
 
-        JSONObject firstRecord = domainNameInfo.getJSONObject("DomainRecords").getJSONArray("Record").getJSONObject(0);
-        System.out.println("first domain record: " + firstRecord);
+        String rrPatern = properties.getProperty("recordPattern");
+
+        JSONObject aRecord = findARecord(domainNameInfo, rrPatern);
+        System.out.println("Use pattern '" + rrPatern + "' found domain record: " + aRecord);
 
         String internetIp = Utils.getInternetIp();
-        System.out.println("fetch internet ip: " + internetIp);
+        System.out.println("Fetch internet ip: " + internetIp);
 
-        String recordValue = firstRecord.getString("Value");
+        String recordValue = aRecord.getString("Value");
 
         if (!internetIp.equals(recordValue)) {
-            System.out.println("begin update domain record, old value: " + recordValue + ", new value: " + internetIp);
-            JSONObject updateDnsResult = dnsClient.updateDns(firstRecord, internetIp);
-            System.out.println("update domain record finished");
+            System.out.println("Begin update domain record, old value: " + recordValue + ", new value: " + internetIp);
+            JSONObject updateDnsResult = dnsClient.updateDns(aRecord, internetIp);
+            System.out.println("Update domain record finished");
             System.exit(666);
         } else {
-            System.out.println("domain record value is same as internet ip, will not modify record");
+            System.out.println("Domain record value is same as internet ip, will not modify record");
             System.exit(0);
         }
+    }
+
+    private static JSONObject findARecord(JSONObject domainNameInfo, String pattern) {
+        JSONArray records = domainNameInfo.getJSONObject("DomainRecords").getJSONArray("Record");
+        for (int i = 0; i < records.length(); i++) {
+            JSONObject record = records.getJSONObject(i);
+            String type = record.getString("Type");
+            String rr = record.getString("RR");
+            if ("A".equals(type) && rr.matches(pattern)) {
+                return record;
+            }
+        }
+        throw new IllegalStateException("Can not find A record by pattern: " + pattern);
     }
 
     private static Properties getConfig() throws IOException {
@@ -52,11 +68,14 @@ public class App {
             Properties properties = new Properties();
             fileInputStream = new FileInputStream("config.properties");
             properties.load(fileInputStream);
+            if (Utils.isBlank(properties.getProperty("recordPattern"))) {
+                properties.put("recordPattern", "[\\s\\S]*");
+            }
             return properties;
         } catch (FileNotFoundException e) {
-            throw new IllegalStateException("lost config.properties", e);
+            throw new IllegalStateException("Lost config.properties", e);
         } catch (Throwable t) {
-            throw new IllegalStateException("loading config.properties fail", t);
+            throw new IllegalStateException("Loading config.properties fail", t);
         } finally {
             if (fileInputStream != null) {
                 fileInputStream.close();

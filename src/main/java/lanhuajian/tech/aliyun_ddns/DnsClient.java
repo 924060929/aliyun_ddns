@@ -33,7 +33,7 @@ public class DnsClient {
 
             return JSONObject.fromString(respStr);
         } catch (Throwable t) {
-            throw new IllegalStateException("fetch domain record list fail, domainName: " + domainName, t);
+            throw new IllegalStateException("Fetch domain record list fail, domainName: " + domainName, t);
         }
     }
 
@@ -50,7 +50,7 @@ public class DnsClient {
             String respStr = Utils.requestHttp(ALIDNS_URL, params);
             return JSONObject.fromString(respStr);
         } catch (Throwable t) {
-            throw new IllegalStateException("update domain record fail, ip: " + ip + ", record: " + jsonObject, t);
+            throw new IllegalStateException("Update domain record fail, ip: " + ip + ", record: " + jsonObject, t);
         }
     }
 

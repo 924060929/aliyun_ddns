@@ -63,7 +63,7 @@ public class Utils {
                 lastException = t;
             }
         }
-        throw new IllegalStateException("get internet ip fail", lastException);
+        throw new IllegalStateException("Get internet ip fail", lastException);
     }
 
     public static String requestHttp(String url, Map<String, String> param) throws IOException {
@@ -168,5 +168,9 @@ public class Utils {
         }
 
         return newUrl.toString();
+    }
+
+    public static boolean isBlank(String str) {
+        return str == null || str.isEmpty() || str.trim().isEmpty();
     }
 }
