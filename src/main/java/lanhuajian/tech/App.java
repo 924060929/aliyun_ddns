@@ -38,7 +38,7 @@ public class App {
         if (!internetIp.equals(recordValue)) {
             System.out.println("begin update domain record, old value: " + recordValue + ", new value: " + internetIp);
             JSONObject updateDnsResult = dnsClient.updateDns(firstRecord, internetIp);
-            System.out.println("update domain record finish");
+            System.out.println("update domain record finished");
             System.exit(666);
         } else {
             System.out.println("domain record value is same as internet ip, will not modify record");

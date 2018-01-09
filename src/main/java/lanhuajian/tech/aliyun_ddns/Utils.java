@@ -66,10 +66,6 @@ public class Utils {
         throw new IllegalStateException("get internet ip fail", lastException);
     }
 
-    public static void main(String[] args) {
-        System.out.println(getInternetIp());
-    }
-
     public static String requestHttp(String url, Map<String, String> param) throws IOException {
         String realUrl = buildUrl(url, param);
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(realUrl).openConnection();
