@@ -86,11 +86,14 @@ public class Utils {
     }
 
     public static String stream2Str(InputStream inputStream) throws IOException {
+        return reader2Str(new InputStreamReader(inputStream, "UTF-8"));
+    }
+
+    public static String reader2Str(Reader reader) throws IOException {
         StringBuilder response = new StringBuilder();
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
         char[] buffer = new char[1024];
         int readSize = 0;
-        while ((readSize = inputStreamReader.read(buffer)) != -1) {
+        while ((readSize = reader.read(buffer)) != -1) {
             response.append(buffer, 0, readSize);
         }
         return response.toString();
@@ -154,7 +157,7 @@ public class Utils {
             return url;
         }
         StringBuilder newUrl = new StringBuilder(url);
-        newUrl.append("/?");
+        newUrl.append("?");
         boolean isFirst = true;
         for (Map.Entry<String, String> kv : params.entrySet()) {
             if (!isFirst) {
