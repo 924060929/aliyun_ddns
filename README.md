@@ -4,7 +4,7 @@
 参考了[阿里云SDK](https://github.com/aliyun/aliyun-openapi-java-sdk)的源码，并做精简
 
 ## 安装运行
-1. 使用maven3.1.1和java1.5编译
+1. 使用maven编译
     ```
     mvn package
     ```
